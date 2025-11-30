@@ -44,7 +44,7 @@ export class LoginComponent {
           this.loading = false;
           alert('Login exitoso. Bienvenido ' + usuario.username);
           // Aquí podrías guardar el usuario en localStorage o service de auth
-          this.router.navigate(['/']); // Ir a home o dashboard
+          this.router.navigate(['/dashboard']); // Ir a home o dashboard
         },
         error: (error) => {
           this.loading = false;
