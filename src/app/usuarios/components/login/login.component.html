@@ -1,38 +1,71 @@
-<div class="login-container">
-  <h2>Login</h2>
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="username">Username:</label>
-      <input
-        type="text"
-        id="username"
-        formControlName="username"
-        required
-      >
-      <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="error">
-        Username es requerido.
+<div class="login-wrapper">
+  <!-- Left Panel: Background Image -->
+  <div class="login-left">
+    <div class="overlay"></div>
+  </div>
+
+  <!-- Right Panel: Login Form -->
+  <div class="login-right">
+    <div class="login-content">
+      <div class="logo-container">
+        <img src="assets/colmena-logo.png" alt="Colmena Logo" class="logo">
+        <h1 class="brand-name">COLMENA</h1>
+      </div>
+
+      <h2 class="welcome-title">¡Bienvenido a Colmena!</h2>
+      <p class="welcome-subtitle">Por favor, ingrese los siguientes datos</p>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <div class="form-group">
+          <div class="input-wrapper">
+            <i class="icon-user"></i> <!-- Placeholder for icon -->
+            <input
+              type="text"
+              id="username"
+              formControlName="username"
+              placeholder="Ingrese su usuario"
+              [class.error-input]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+            >
+          </div>
+          <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="error-text">
+            Username es requerido.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-wrapper">
+            <i class="icon-lock"></i> <!-- Placeholder for icon -->
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              formControlName="password"
+              placeholder="Ingrese su contraseña"
+              [class.error-input]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+            >
+            <button type="button" class="toggle-password" (click)="togglePassword()">
+              <i [class]="showPassword ? 'icon-eye-off' : 'icon-eye'"></i>
+            </button>
+          </div>
+          <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-text">
+            Password es requerido.
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary" [disabled]="loginForm.invalid || loading">
+          {{ loading ? 'Iniciando sesión...' : 'Iniciar sesión' }}
+        </button>
+      </form>
+
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+      <div class="divider">
+        <span>o</span>
+      </div>
+
+      <div class="register-link">
+        <div class="icon-register"></div>
+        <p>¿No tienes cuenta? <a routerLink="/register">Regístrate aquí</a></p>
       </div>
     </div>
-
-    <div class="form-group">
-      <label for="password">Password:</label>
-      <input
-        type="password"
-        id="password"
-        formControlName="password"
-        required
-      >
-      <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
-        Password es requerido.
-      </div>
-    </div>
-
-    <button type="submit" [disabled]="loginForm.invalid || loading">
-      {{ loading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
-    </button>
-  </form>
-
-  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
-
-  <p>¿No tienes cuenta? <a routerLink="/register">Regístrate</a></p>
+  </div>
 </div>

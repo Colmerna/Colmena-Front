@@ -1,51 +1,76 @@
-<div class="register-container">
-  <h2>Registro</h2>
-  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="username">Username:</label>
-      <input
-        type="text"
-        id="username"
-        formControlName="username"
-        required
-      >
-      <div *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched" class="error">
-        Username es requerido y debe tener al menos 3 caracteres.
+<div class="register-wrapper">
+  <!-- Left Panel: Background Image -->
+  <div class="register-left">
+    <div class="overlay"></div>
+  </div>
+
+  <!-- Right Panel: Register Form -->
+  <div class="register-right">
+    <div class="register-content">
+      <div class="logo-container">
+        <img src="assets/colmena-logo.png" alt="Colmena Logo" class="logo">
+        <h1 class="brand-name">COLMENA</h1>
+      </div>
+
+      <h2 class="welcome-title">¡Bienvenido a Colmena!</h2>
+      <p class="welcome-subtitle">Por favor, ingrese los siguientes datos</p>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+        <div class="form-group">
+          <div class="input-wrapper">
+            <i class="icon-user"></i>
+            <input type="text" id="username" formControlName="username" placeholder="Ingrese su usuario"
+              [class.error-input]="registerForm.get('username')?.invalid && registerForm.get('username')?.touched">
+          </div>
+          <div *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched"
+            class="error-text">
+            Username es requerido (min 3 chars).
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-wrapper">
+            <i class="icon-email"></i>
+            <input type="email" id="email" formControlName="email" placeholder="Ingrese su email"
+              [class.error-input]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+          </div>
+          <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error-text">
+            Email válido es requerido.
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-wrapper">
+            <i class="icon-lock"></i>
+            <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password"
+              placeholder="Ingrese su contraseña"
+              [class.error-input]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+            <button type="button" class="toggle-password" (click)="togglePassword()">
+              <i [class]="showPassword ? 'icon-eye-off' : 'icon-eye'"></i>
+            </button>
+          </div>
+          <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+            class="error-text">
+            Password es requerido (min 6 chars).
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary" [disabled]="registerForm.invalid || loading">
+          {{ loading ? 'Registrando...' : 'Registrarse' }}
+        </button>
+      </form>
+
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+      <div class="divider">
+        <span>o</span>
+      </div>
+      <div class="login-link">
+        <p>
+          <img src="icons/register.png" alt="Icono de registro" class="icon-inline">
+          ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión aquí</a>
+        </p>
       </div>
     </div>
-
-    <div class="form-group">
-      <label for="email">Email:</label>
-      <input
-        type="email"
-        id="email"
-        formControlName="email"
-        required
-      >
-      <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error">
-        Email válido es requerido.
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="password">Password:</label>
-      <input
-        type="password"
-        id="password"
-        formControlName="password"
-        required
-      >
-      <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error">
-        Password es requerido y debe tener al menos 6 caracteres.
-      </div>
-    </div>
-
-    <button type="submit" [disabled]="registerForm.invalid || loading">
-      {{ loading ? 'Registrando...' : 'Registrar' }}
-    </button>
-  </form>
-
-  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
-
-  <p>¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+  </div>
 </div>

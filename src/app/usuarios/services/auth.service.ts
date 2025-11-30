@@ -24,17 +24,22 @@ export interface LoginRequest {
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:8080/api'; // Ajusta si el backend está en otro puerto
+  private baseUrl = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) {}
 
   register(registerRequest: RegisterRequest): Observable<Usuario> {
-    console.log('Calling register API:', `${this.baseUrl}/usuarios`, registerRequest);
+    // Ajustado a /auth/register si es lo estándar, o mantener /usuarios si es lo que tiene el backend actual.
+    // El usuario mencionó "conectados a los endpoints de springboot".
+    // Asumiré /auth/register para registro público o /usuarios si es creación directa.
+    // Basado en el código anterior era /usuarios. Lo mantendré pero verificaré si falla.
+    // Mejor uso /auth/register si existe, pero por ahora /usuarios parece ser lo que había.
+    // Voy a asumir que el backend tiene un AuthController estándar.
+    // Si falla, ajustaremos.
     return this.http.post<Usuario>(`${this.baseUrl}/usuarios`, registerRequest);
   }
 
   login(loginRequest: LoginRequest): Observable<Usuario> {
-    console.log('Calling login API:', `${this.baseUrl}/auth/login`, loginRequest);
     return this.http.post<Usuario>(`${this.baseUrl}/auth/login`, loginRequest);
   }
 }

@@ -15,6 +15,7 @@ export class RegisterComponent {
   registerForm: FormGroup;
   loading = false;
   errorMessage = '';
+  showPassword = false;
 
   constructor(
     private fb: FormBuilder,
@@ -26,6 +27,10 @@ export class RegisterComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
   }
 
   onSubmit() {
