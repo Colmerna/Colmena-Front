@@ -7,10 +7,10 @@ import { UiButtonComponent } from '../../../shared/components/ui-button/ui-butto
 import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.component';
 
 @Component({
-    selector: 'app-create-financing',
-    standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, UiButtonComponent, UiInputComponent],
-    template: `
+  selector: 'app-create-financing',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, UiButtonComponent, UiInputComponent],
+  template: `
     <div class="create-financing-container">
       <div class="back-link" (click)="goBack()">
         <span class="material-icons">arrow_back</span> Volver a financiamiento
@@ -19,6 +19,10 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
       <div class="form-card bg-primary-yellow">
         <h2 class="form-title">Crear nuevo financiamiento</h2>
         
+        <div *ngIf="errorMessage" class="error-alert">
+            {{ errorMessage }}
+        </div>
+
         <form [formGroup]="financingForm" (ngSubmit)="onSubmit()">
           <div class="form-grid">
             <!-- Left Column -->
@@ -28,7 +32,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                 placeholder="Ingresar monto" 
                 icon="attach_money"
                 type="number"
-                formControlName="montoPrestamo">
+                formControlName="montoPrestamo"
+                [errorMessage]="isFieldInvalid('montoPrestamo') ? getErrorMessage('montoPrestamo') : ''">
               </app-ui-input>
 
               <app-ui-input 
@@ -36,7 +41,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                 placeholder="Ingresar tasa" 
                 icon="percent"
                 type="number"
-                formControlName="tasaInteresAnual">
+                formControlName="tasaInteresAnual"
+                [errorMessage]="isFieldInvalid('tasaInteresAnual') ? getErrorMessage('tasaInteresAnual') : ''">
               </app-ui-input>
 
               <app-ui-input 
@@ -44,7 +50,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                 placeholder="Ingresar plazo" 
                 icon="calendar_today"
                 type="number"
-                formControlName="plazoMeses">
+                formControlName="plazoMeses"
+                [errorMessage]="isFieldInvalid('plazoMeses') ? getErrorMessage('plazoMeses') : ''">
               </app-ui-input>
 
               <app-ui-input 
@@ -52,7 +59,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                 placeholder="YYYY-MM-DD" 
                 icon="event"
                 type="date"
-                formControlName="fechaInicio">
+                formControlName="fechaInicio"
+                [errorMessage]="isFieldInvalid('fechaInicio') ? getErrorMessage('fechaInicio') : ''">
               </app-ui-input>
             </div>
 
@@ -63,7 +71,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                 placeholder="ID del cliente" 
                 icon="person"
                 type="number"
-                formControlName="clienteId">
+                formControlName="clienteId"
+                [errorMessage]="isFieldInvalid('clienteId') ? getErrorMessage('clienteId') : ''">
               </app-ui-input>
 
               <app-ui-input 
@@ -71,7 +80,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                 placeholder="ID del proyecto" 
                 icon="home"
                 type="number"
-                formControlName="proyectoId">
+                formControlName="proyectoId"
+                [errorMessage]="isFieldInvalid('proyectoId') ? getErrorMessage('proyectoId') : ''">
               </app-ui-input>
 
               <app-ui-input 
@@ -79,7 +89,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                 placeholder="ID del banco" 
                 icon="account_balance"
                 type="number"
-                formControlName="bancoId">
+                formControlName="bancoId"
+                [errorMessage]="isFieldInvalid('bancoId') ? getErrorMessage('bancoId') : ''">
               </app-ui-input>
 
               <div class="button-container">
@@ -87,7 +98,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                     label="Crear" 
                     type="submit"
                     [fullWidth]="false"
-                    class="create-btn">
+                    class="create-btn"
+                    [disabled]="financingForm.invalid">
                  </app-ui-button>
               </div>
             </div>
@@ -96,7 +108,7 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
       </div>
     </div>
   `,
-    styles: [`
+  styles: [`
     .create-financing-container {
       padding: 20px;
     }
@@ -139,44 +151,79 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
         padding-left: 40px;
         padding-right: 40px;
     }
+    .error-alert {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #f5c6cb;
+        border-radius: 5px;
+    }
   `]
 })
 export class CreateFinancingComponent {
-    financingForm: FormGroup;
+  financingForm: FormGroup;
+  errorMessage: string = '';
 
-    constructor(
-        private fb: FormBuilder,
-        private financingService: FinancingService,
-        private router: Router
-    ) {
-        this.financingForm = this.fb.group({
-            montoPrestamo: [0, Validators.required],
-            tasaInteresAnual: [0, Validators.required],
-            plazoMeses: [0, Validators.required],
-            fechaInicio: ['', Validators.required],
-            clienteId: [1, Validators.required], // Default or input
-            proyectoId: [1, Validators.required], // Default or input
-            bancoId: [1, Validators.required], // Default or input
-            seguroDesgravamenMensual: [0],
-            seguroInmuebleAnual: [0],
-            estadoCredito: ['APROBADO'] // Default
-        });
-    }
+  constructor(
+    private fb: FormBuilder,
+    private financingService: FinancingService,
+    private router: Router
+  ) {
+    this.financingForm = this.fb.group({
+      montoPrestamo: [0, [Validators.required, Validators.min(1)]],
+      tasaInteresAnual: [0, [Validators.required, Validators.min(0), Validators.max(100)]],
+      plazoMeses: [0, [Validators.required, Validators.min(1)]],
+      fechaInicio: ['', Validators.required],
+      clienteId: [1, Validators.required],
+      proyectoId: [1, Validators.required],
+      bancoId: [1, Validators.required],
+      seguroDesgravamenMensual: [0],
+      seguroInmuebleAnual: [0],
+      estadoCredito: ['APROBADO']
+    });
+  }
 
-    onSubmit() {
-        if (this.financingForm.valid) {
-            this.financingService.createFinancing(this.financingForm.value).subscribe({
-                next: () => {
-                    this.router.navigate(['/dashboard/financing']);
-                },
-                error: (err) => {
-                    console.error('Error creating financing', err);
-                }
-            });
+  onSubmit() {
+    if (this.financingForm.valid) {
+      this.errorMessage = '';
+      this.financingService.createFinancing(this.financingForm.value).subscribe({
+        next: () => {
+          this.router.navigate(['/dashboard/financing']);
+        },
+        error: (err) => {
+          console.error('Error creating financing', err);
+          if (err.status === 500) {
+            this.errorMessage = 'Error interno del servidor. Verifica los datos.';
+          } else if (err.status === 404) {
+            this.errorMessage = 'No se pudo conectar con el servidor (404).';
+          } else {
+            this.errorMessage = 'Ocurrió un error al crear el financiamiento.';
+          }
         }
+      });
+    } else {
+      this.financingForm.markAllAsTouched();
     }
+  }
 
-    goBack() {
-        this.router.navigate(['/dashboard/financing']);
-    }
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.financingForm.get(fieldName);
+    return field ? (field.invalid && (field.dirty || field.touched)) : false;
+  }
+
+  getErrorMessage(fieldName: string): string {
+    const field = this.financingForm.get(fieldName);
+    if (!field || !field.errors) return '';
+
+    if (field.errors['required']) return 'Este campo es obligatorio';
+    if (field.errors['min']) return `El valor debe ser mayor o igual a ${field.errors['min'].min}`;
+    if (field.errors['max']) return `El valor debe ser menor o igual a ${field.errors['max'].max}`;
+
+    return 'Campo inválido';
+  }
+
+  goBack() {
+    this.router.navigate(['/dashboard/financing']);
+  }
 }

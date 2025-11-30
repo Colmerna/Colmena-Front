@@ -3,17 +3,17 @@ import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 @Component({
-    selector: 'app-ui-input',
-    standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, FormsModule],
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => UiInputComponent),
-            multi: true
-        }
-    ],
-    template: `
+  selector: 'app-ui-input',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => UiInputComponent),
+      multi: true
+    }
+  ],
+  template: `
     <div class="input-container">
       <label *ngIf="label" class="input-label">{{ label }}</label>
       <div class="input-wrapper">
@@ -25,11 +25,13 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule, FormsModu
           (input)="onInput($event)"
           (blur)="onTouched()"
           class="ui-input"
+          [class.has-error]="!!errorMessage"
         />
       </div>
+      <span *ngIf="errorMessage" class="error-text">{{ errorMessage }}</span>
     </div>
   `,
-    styles: [`
+  styles: [`
     .input-container {
       margin-bottom: 15px;
     }
@@ -60,6 +62,9 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule, FormsModu
       font-size: 1rem;
       outline: none;
     }
+    .ui-input.has-error {
+      border-color: #dc3545;
+    }
     .ui-input::placeholder {
       color: var(--text-dark);
       opacity: 0.6;
@@ -67,33 +72,41 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule, FormsModu
     .ui-input:focus {
       border-width: 2px;
     }
+    .error-text {
+      color: #dc3545;
+      font-size: 0.8rem;
+      margin-top: 5px;
+      display: block;
+      padding-left: 10px;
+    }
   `]
 })
 export class UiInputComponent implements ControlValueAccessor {
-    @Input() label: string = '';
-    @Input() placeholder: string = '';
-    @Input() type: string = 'text';
-    @Input() icon: string = '';
+  @Input() label: string = '';
+  @Input() placeholder: string = '';
+  @Input() type: string = 'text';
+  @Input() icon: string = '';
+  @Input() errorMessage: string = '';
 
-    value: string = '';
-    onChange: any = () => { };
-    onTouched: any = () => { };
+  value: string = '';
+  onChange: any = () => { };
+  onTouched: any = () => { };
 
-    onInput(event: Event) {
-        const value = (event.target as HTMLInputElement).value;
-        this.value = value;
-        this.onChange(value);
-    }
+  onInput(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.value = value;
+    this.onChange(value);
+  }
 
-    writeValue(value: any): void {
-        this.value = value || '';
-    }
+  writeValue(value: any): void {
+    this.value = value || '';
+  }
 
-    registerOnChange(fn: any): void {
-        this.onChange = fn;
-    }
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
 
-    registerOnTouched(fn: any): void {
-        this.onTouched = fn;
-    }
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
 }

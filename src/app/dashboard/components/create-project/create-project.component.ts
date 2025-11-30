@@ -7,10 +7,10 @@ import { UiButtonComponent } from '../../../shared/components/ui-button/ui-butto
 import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.component';
 
 @Component({
-    selector: 'app-create-project',
-    standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, UiButtonComponent, UiInputComponent],
-    template: `
+  selector: 'app-create-project',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, UiButtonComponent, UiInputComponent],
+  template: `
     <div class="create-project-container">
       <div class="back-link" (click)="goBack()">
         <span class="material-icons">arrow_back</span> Volver a lista de proyectos
@@ -19,6 +19,10 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
       <div class="form-card bg-primary-yellow">
         <h2 class="form-title">Crear nuevo proyecto</h2>
         
+        <div *ngIf="errorMessage" class="error-alert">
+            {{ errorMessage }}
+        </div>
+
         <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
           <div class="form-grid">
             <!-- Left Column -->
@@ -27,21 +31,24 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                 label="Nombre del proyecto" 
                 placeholder="Ingresar nombre del proyecto" 
                 icon="home"
-                formControlName="nombre">
+                formControlName="nombre"
+                [errorMessage]="isFieldInvalid('nombre') ? getErrorMessage('nombre') : ''">
               </app-ui-input>
 
               <app-ui-input 
                 label="Dirección" 
                 placeholder="Ingresar la dirección del proyecto" 
                 icon="home"
-                formControlName="direccion">
+                formControlName="direccion"
+                [errorMessage]="isFieldInvalid('direccion') ? getErrorMessage('direccion') : ''">
               </app-ui-input>
 
               <app-ui-input 
                 label="Distrito" 
                 placeholder="Ingresar el distrito del proyecto" 
                 icon="home"
-                formControlName="distrito">
+                formControlName="distrito"
+                [errorMessage]="isFieldInvalid('distrito') ? getErrorMessage('distrito') : ''">
               </app-ui-input>
 
               <app-ui-input 
@@ -49,7 +56,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                 placeholder="Ingresar el área del proyecto" 
                 icon="home"
                 type="number"
-                formControlName="areaM2">
+                formControlName="areaM2"
+                [errorMessage]="isFieldInvalid('areaM2') ? getErrorMessage('areaM2') : ''">
               </app-ui-input>
 
               <app-ui-input 
@@ -57,7 +65,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                 placeholder="Ingresar el ID del banco" 
                 icon="home"
                 type="number"
-                formControlName="bancoId">
+                formControlName="bancoId"
+                [errorMessage]="isFieldInvalid('bancoId') ? getErrorMessage('bancoId') : ''">
               </app-ui-input>
             </div>
 
@@ -68,7 +77,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                 placeholder="Ingresar el precio de la propiedad" 
                 icon="home"
                 type="number"
-                formControlName="precio">
+                formControlName="precio"
+                [errorMessage]="isFieldInvalid('precio') ? getErrorMessage('precio') : ''">
               </app-ui-input>
 
               <app-ui-input 
@@ -76,7 +86,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                 placeholder="Ingresar el N de habitaciones" 
                 icon="home"
                 type="number"
-                formControlName="numHabitaciones">
+                formControlName="numHabitaciones"
+                [errorMessage]="isFieldInvalid('numHabitaciones') ? getErrorMessage('numHabitaciones') : ''">
               </app-ui-input>
 
               <div class="input-container">
@@ -89,6 +100,7 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                         <option value="CASA">Casa</option>
                     </select>
                 </div>
+                <span class="error-text" *ngIf="isFieldInvalid('tipoProyecto')">{{ getErrorMessage('tipoProyecto') }}</span>
               </div>
 
               <div class="input-container">
@@ -102,6 +114,7 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                         <option value="ENTREGA_INMEDIATA">Entrega Inmediata</option>
                     </select>
                 </div>
+                <span class="error-text" *ngIf="isFieldInvalid('estadoProyecto')">{{ getErrorMessage('estadoProyecto') }}</span>
               </div>
 
               <div class="button-container">
@@ -109,7 +122,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                     label="Crear" 
                     type="submit"
                     [fullWidth]="false"
-                    class="create-btn">
+                    class="create-btn"
+                    [disabled]="projectForm.invalid">
                  </app-ui-button>
               </div>
             </div>
@@ -118,7 +132,7 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
       </div>
     </div>
   `,
-    styles: [`
+  styles: [`
     .create-project-container {
       padding: 20px;
     }
@@ -194,48 +208,89 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
         padding-left: 40px;
         padding-right: 40px;
     }
+    .error-alert {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #f5c6cb;
+        border-radius: 5px;
+    }
+    .error-text {
+        color: #dc3545;
+        font-size: 0.8rem;
+        margin-top: 5px;
+        display: block;
+        padding-left: 10px;
+    }
   `]
 })
 export class CreateProjectComponent {
-    projectForm: FormGroup;
+  projectForm: FormGroup;
+  errorMessage: string = '';
 
-    constructor(
-        private fb: FormBuilder,
-        private projectService: ProjectService,
-        private router: Router
-    ) {
-        this.projectForm = this.fb.group({
-            nombre: ['', Validators.required],
-            direccion: ['', Validators.required],
-            distrito: ['', Validators.required],
-            areaM2: [0, Validators.required],
-            precio: [0, Validators.required],
-            igv: [0], // Calculated or input? Assuming input or backend calc
-            numHabitaciones: [0, Validators.required],
-            tipoProyecto: ['', Validators.required],
-            estadoProyecto: ['', Validators.required],
-            bancoId: [1, Validators.required] // Default or input
-        });
-    }
+  constructor(
+    private fb: FormBuilder,
+    private projectService: ProjectService,
+    private router: Router
+  ) {
+    this.projectForm = this.fb.group({
+      nombre: ['', [Validators.required, Validators.minLength(3)]],
+      direccion: ['', [Validators.required, Validators.minLength(5)]],
+      distrito: ['', Validators.required],
+      areaM2: [0, [Validators.required, Validators.min(1)]],
+      precio: [0, [Validators.required, Validators.min(1)]],
+      igv: [0],
+      numHabitaciones: [0, [Validators.required, Validators.min(1)]],
+      tipoProyecto: ['', Validators.required],
+      estadoProyecto: ['', Validators.required],
+      bancoId: [1, Validators.required]
+    });
+  }
 
-    onSubmit() {
-        if (this.projectForm.valid) {
-            // Simple IGV calc if needed, or let backend handle it
-            const formValue = this.projectForm.value;
-            formValue.igv = formValue.precio * 0.18; // Example
+  onSubmit() {
+    if (this.projectForm.valid) {
+      this.errorMessage = '';
+      const formValue = this.projectForm.value;
+      formValue.igv = formValue.precio * 0.18;
 
-            this.projectService.createProject(formValue).subscribe({
-                next: () => {
-                    this.router.navigate(['/dashboard/projects']);
-                },
-                error: (err) => {
-                    console.error('Error creating project', err);
-                }
-            });
+      this.projectService.createProject(formValue).subscribe({
+        next: () => {
+          this.router.navigate(['/dashboard/projects']);
+        },
+        error: (err) => {
+          console.error('Error creating project', err);
+          if (err.status === 500) {
+            this.errorMessage = 'Error interno del servidor. Verifica los datos ingresados.';
+          } else if (err.status === 404) {
+            this.errorMessage = 'No se pudo conectar con el servidor (404).';
+          } else {
+            this.errorMessage = 'Ocurrió un error al crear el proyecto.';
+          }
         }
+      });
+    } else {
+      this.projectForm.markAllAsTouched();
     }
+  }
 
-    goBack() {
-        this.router.navigate(['/dashboard/projects']);
-    }
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.projectForm.get(fieldName);
+    return field ? (field.invalid && (field.dirty || field.touched)) : false;
+  }
+
+  getErrorMessage(fieldName: string): string {
+    const field = this.projectForm.get(fieldName);
+    if (!field || !field.errors) return '';
+
+    if (field.errors['required']) return 'Este campo es obligatorio';
+    if (field.errors['minlength']) return `Mínimo ${field.errors['minlength'].requiredLength} caracteres`;
+    if (field.errors['min']) return `El valor debe ser mayor o igual a ${field.errors['min'].min}`;
+
+    return 'Campo inválido';
+  }
+
+  goBack() {
+    this.router.navigate(['/dashboard/projects']);
+  }
 }

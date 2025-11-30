@@ -7,10 +7,10 @@ import { UiButtonComponent } from '../../../shared/components/ui-button/ui-butto
 import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.component';
 
 @Component({
-    selector: 'app-create-client',
-    standalone: true,
-    imports: [CommonModule, ReactiveFormsModule, UiButtonComponent, UiInputComponent],
-    template: `
+  selector: 'app-create-client',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, UiButtonComponent, UiInputComponent],
+  template: `
     <div class="create-client-container">
       <div class="back-link" (click)="goBack()">
         <span class="material-icons">arrow_back</span> Volver a lista de clientes
@@ -19,6 +19,10 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
       <div class="form-card bg-primary-yellow">
         <h2 class="form-title">Crear nuevo cliente</h2>
         
+        <div *ngIf="errorMessage" class="error-alert">
+            {{ errorMessage }}
+        </div>
+
         <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
           <div class="form-grid">
             <!-- Left Column -->
@@ -27,28 +31,32 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                 label="ID del cliente" 
                 placeholder="Ingresar ID del cliente (DNI/CDE/PAS)" 
                 icon="person_outline"
-                formControlName="dni">
+                formControlName="dni"
+                [errorMessage]="isFieldInvalid('dni') ? getErrorMessage('dni') : ''">
               </app-ui-input>
 
               <app-ui-input 
                 label="Nombres" 
                 placeholder="Ingresar el nombre del cliente" 
                 icon="person_outline"
-                formControlName="nombres">
+                formControlName="nombres"
+                [errorMessage]="isFieldInvalid('nombres') ? getErrorMessage('nombres') : ''">
               </app-ui-input>
 
               <app-ui-input 
                 label="Apellidos" 
                 placeholder="Ingresar el apellido del cliente" 
                 icon="person_outline"
-                formControlName="apellidos">
+                formControlName="apellidos"
+                [errorMessage]="isFieldInvalid('apellidos') ? getErrorMessage('apellidos') : ''">
               </app-ui-input>
 
               <app-ui-input 
                 label="Email" 
                 placeholder="Ingresar el email del cliente" 
                 icon="email"
-                formControlName="email">
+                formControlName="email"
+                [errorMessage]="isFieldInvalid('email') ? getErrorMessage('email') : ''">
               </app-ui-input>
 
               <app-ui-input 
@@ -56,7 +64,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                 placeholder="Ingresar los dependientes" 
                 icon="people_outline"
                 type="number"
-                formControlName="dependientes">
+                formControlName="dependientes"
+                [errorMessage]="isFieldInvalid('dependientes') ? getErrorMessage('dependientes') : ''">
               </app-ui-input>
 
               <app-ui-input 
@@ -64,7 +73,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                 placeholder="Ingresar el gasto mensual" 
                 icon="attach_money"
                 type="number"
-                formControlName="gastoMensualAprox">
+                formControlName="gastoMensualAprox"
+                [errorMessage]="isFieldInvalid('gastoMensualAprox') ? getErrorMessage('gastoMensualAprox') : ''">
               </app-ui-input>
             </div>
 
@@ -74,7 +84,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                 label="Número de contacto" 
                 placeholder="Ingresar el teléfono del cliente" 
                 icon="phone"
-                formControlName="telefono">
+                formControlName="telefono"
+                [errorMessage]="isFieldInvalid('telefono') ? getErrorMessage('telefono') : ''">
               </app-ui-input>
 
               <app-ui-input 
@@ -82,7 +93,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                 placeholder="Ingresar el ingreso del cliente" 
                 icon="attach_money"
                 type="number"
-                formControlName="ingresoMensual">
+                formControlName="ingresoMensual"
+                [errorMessage]="isFieldInvalid('ingresoMensual') ? getErrorMessage('ingresoMensual') : ''">
               </app-ui-input>
 
               <div class="input-container">
@@ -95,6 +107,7 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                         <option value="INDEPENDIENTE">Independiente</option>
                     </select>
                 </div>
+                <span class="error-text" *ngIf="isFieldInvalid('situacionLaboral')">{{ getErrorMessage('situacionLaboral') }}</span>
               </div>
 
               <app-ui-input 
@@ -102,7 +115,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                 placeholder="Ingresar el puntaje de riesgo" 
                 icon="trending_up"
                 type="number"
-                formControlName="scoreRiesgo">
+                formControlName="scoreRiesgo"
+                [errorMessage]="isFieldInvalid('scoreRiesgo') ? getErrorMessage('scoreRiesgo') : ''">
               </app-ui-input>
 
               <div class="input-container">
@@ -115,6 +129,7 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                         <option value="CASADO">Casado</option>
                     </select>
                 </div>
+                <span class="error-text" *ngIf="isFieldInvalid('estadoCivil')">{{ getErrorMessage('estadoCivil') }}</span>
               </div>
 
               <div class="button-container">
@@ -122,7 +137,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                     label="Crear" 
                     type="submit"
                     [fullWidth]="false"
-                    class="create-btn">
+                    class="create-btn"
+                    [disabled]="clientForm.invalid">
                  </app-ui-button>
               </div>
             </div>
@@ -131,7 +147,7 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
       </div>
     </div>
   `,
-    styles: [`
+  styles: [`
     .create-client-container {
       padding: 20px;
     }
@@ -190,13 +206,6 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
       padding: 12px 15px 12px 45px;
       border: 1px solid var(--primary-blue);
       border-radius: 25px;
-      background-color: var(--primary-yellow); /* Or transparent if parent is yellow? No, input bg is yellow/transparent */
-      /* Actually in the image the inputs are slightly darker yellow or outlined? 
-         The inputs seem to have a border and same background color as card but maybe slightly different shade?
-         Let's stick to the shared input style which has yellow background.
-         Wait, if the card is yellow, and input is yellow, it might blend. 
-         In the image, the inputs have a border.
-      */
       background-color: rgba(255, 255, 255, 0.1); /* Slight transparency or just border */
       border: 1px solid #333; /* Darker border */
       color: var(--text-dark);
@@ -219,46 +228,91 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
         padding-left: 40px;
         padding-right: 40px;
     }
+    .error-alert {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #f5c6cb;
+        border-radius: 5px;
+    }
+    .error-text {
+        color: #dc3545;
+        font-size: 0.8rem;
+        margin-top: 5px;
+        display: block;
+        padding-left: 10px;
+    }
   `]
 })
 export class CreateClientComponent {
-    clientForm: FormGroup;
+  clientForm: FormGroup;
+  errorMessage: string = '';
 
-    constructor(
-        private fb: FormBuilder,
-        private clientService: ClientService,
-        private router: Router
-    ) {
-        this.clientForm = this.fb.group({
-            dni: ['', Validators.required],
-            nombres: ['', Validators.required],
-            apellidos: ['', Validators.required],
-            email: ['', [Validators.required, Validators.email]],
-            dependientes: [0],
-            gastoMensualAprox: [0],
-            telefono: ['', Validators.required],
-            ingresoMensual: [0, Validators.required],
-            situacionLaboral: ['', Validators.required],
-            scoreRiesgo: [0],
-            estadoCivil: ['', Validators.required],
-            usuarioId: [1] // Hardcoded for now
-        });
-    }
+  constructor(
+    private fb: FormBuilder,
+    private clientService: ClientService,
+    private router: Router
+  ) {
+    this.clientForm = this.fb.group({
+      dni: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(12), Validators.pattern('^[0-9A-Za-z]+$')]],
+      nombres: ['', [Validators.required, Validators.minLength(2)]],
+      apellidos: ['', [Validators.required, Validators.minLength(2)]],
+      email: ['', [Validators.required, Validators.email]],
+      dependientes: [0, [Validators.min(0)]],
+      gastoMensualAprox: [0, [Validators.min(0)]],
+      telefono: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(15), Validators.pattern('^[0-9+]+$')]],
+      ingresoMensual: [0, [Validators.required, Validators.min(0)]],
+      situacionLaboral: ['', Validators.required],
+      scoreRiesgo: [0, [Validators.min(0)]],
+      estadoCivil: ['', Validators.required],
+      usuarioId: [1] // Hardcoded for now
+    });
+  }
 
-    onSubmit() {
-        if (this.clientForm.valid) {
-            this.clientService.createClient(this.clientForm.value).subscribe({
-                next: () => {
-                    this.router.navigate(['/dashboard/clients']);
-                },
-                error: (err) => {
-                    console.error('Error creating client', err);
-                }
-            });
+  onSubmit() {
+    if (this.clientForm.valid) {
+      this.errorMessage = '';
+      this.clientService.createClient(this.clientForm.value).subscribe({
+        next: () => {
+          this.router.navigate(['/dashboard/clients']);
+        },
+        error: (err) => {
+          console.error('Error creating client', err);
+          if (err.status === 500) {
+            this.errorMessage = 'Error interno del servidor. Es posible que el cliente ya exista (DNI duplicado).';
+          } else if (err.status === 404) {
+            this.errorMessage = 'No se pudo conectar con el servidor (404). Verifica que el backend esté corriendo.';
+          } else {
+            this.errorMessage = 'Ocurrió un error al crear el cliente. Por favor intenta nuevamente.';
+          }
         }
+      });
+    } else {
+      this.clientForm.markAllAsTouched();
     }
+  }
 
-    goBack() {
-        this.router.navigate(['/dashboard/clients']);
-    }
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.clientForm.get(fieldName);
+    return field ? (field.invalid && (field.dirty || field.touched)) : false;
+  }
+
+  getErrorMessage(fieldName: string): string {
+    const field = this.clientForm.get(fieldName);
+    if (!field || !field.errors) return '';
+
+    if (field.errors['required']) return 'Este campo es obligatorio';
+    if (field.errors['email']) return 'Formato de email inválido';
+    if (field.errors['minlength']) return `Mínimo ${field.errors['minlength'].requiredLength} caracteres`;
+    if (field.errors['maxlength']) return `Máximo ${field.errors['maxlength'].requiredLength} caracteres`;
+    if (field.errors['min']) return `El valor debe ser mayor o igual a ${field.errors['min'].min}`;
+    if (field.errors['pattern']) return 'Formato inválido (solo números o letras permitidas)';
+
+    return 'Campo inválido';
+  }
+
+  goBack() {
+    this.router.navigate(['/dashboard/clients']);
+  }
 }
