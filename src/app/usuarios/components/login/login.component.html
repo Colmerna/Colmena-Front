@@ -19,13 +19,8 @@
         <div class="form-group">
           <div class="input-wrapper">
             <i class="icon-user"></i> <!-- Placeholder for icon -->
-            <input
-              type="text"
-              id="username"
-              formControlName="username"
-              placeholder="Ingrese su usuario"
-              [class.error-input]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
-            >
+            <input type="text" id="username" formControlName="username" placeholder="Ingrese su usuario"
+              [class.error-input]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
           </div>
           <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="error-text">
             Username es requerido.
@@ -35,13 +30,9 @@
         <div class="form-group">
           <div class="input-wrapper">
             <i class="icon-lock"></i> <!-- Placeholder for icon -->
-            <input
-              [type]="showPassword ? 'text' : 'password'"
-              id="password"
-              formControlName="password"
+            <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password"
               placeholder="Ingrese su contraseña"
-              [class.error-input]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
-            >
+              [class.error-input]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
             <button type="button" class="toggle-password" (click)="togglePassword()">
               <i [class]="showPassword ? 'icon-eye-off' : 'icon-eye'"></i>
             </button>
@@ -62,9 +53,12 @@
         <span>o</span>
       </div>
 
-      <div class="register-link">
-        <div class="icon-register"></div>
-        <p>¿No tienes cuenta? <a routerLink="/register">Regístrate aquí</a></p>
+      <div class="register-link-container">
+        <img src="assets/register.png" alt="Register Icon" class="register-icon">
+        <div class="register-text">
+          <p class="question-text">¿No tienes cuenta?</p>
+          <a routerLink="/register" class="action-link">Regístrate aquí</a>
+        </div>
       </div>
     </div>
   </div>
