@@ -6,4 +6,101 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f4f7f6;
+
+}
+
+:root {
+  --primary-blue: #052147;
+  /* Dark blue from image */
+  --primary-yellow: #fbc000;
+  /* Yellow from image */
+  --text-white: #ffffff;
+  --text-dark: #333333;
+  --background-light: #f5f7fa;
+  --border-color: #e0e0e0;
+}
+
+.bg-primary-blue {
+  background-color: var(--primary-blue);
+  color: var(--text-white);
+}
+
+.bg-primary-yellow {
+  background-color: var(--primary-yellow);
+  color: var(--text-dark);
+}
+
+.text-primary-blue {
+  color: var(--primary-blue);
+}
+
+/* Table Styles */
+.colmena-table-container {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.colmena-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.colmena-table thead {
+  background-color: var(--primary-blue);
+  color: white;
+}
+
+.colmena-table th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.colmena-table tbody tr {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.colmena-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.colmena-table td {
+  padding: 15px;
+  color: var(--text-white);
+  /* Based on image, rows seem dark blue too? Or maybe alternating. Let's check image again. */
+}
+
+/* Actually, looking at the image 'uploaded_image_1764530921343.png', the table body rows are also dark blue, 
+   but slightly lighter or same as header? No, the header is dark, the rows are also dark blue. 
+   Wait, let me re-examine the image. 
+   The header is dark blue. The rows are also dark blue. 
+   The text is white. 
+   There is a border between rows.
+*/
+
+.colmena-table tbody {
+  background-color: #082a58;
+  /* Slightly lighter or same as header */
+  color: white;
+}
+
+.colmena-table tbody tr {
+  border-bottom: 1px solid #1a3c6b;
+}
+
+/* Page Header */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-blue);
 }
