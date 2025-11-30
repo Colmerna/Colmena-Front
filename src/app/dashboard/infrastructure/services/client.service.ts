@@ -7,7 +7,7 @@ import { Client } from '../../domain/model/client.model';
     providedIn: 'root'
 })
 export class ClientService {
-    private apiUrl = '/api/clientes'; // Proxy configuration should handle localhost:8080
+    private apiUrl = '/api/clientes';
 
     constructor(private http: HttpClient) { }
 
