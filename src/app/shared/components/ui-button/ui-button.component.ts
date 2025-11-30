@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
       [ngClass]="{'full-width': fullWidth, 'disabled': disabled}"
       [disabled]="disabled"
       (click)="onClick.emit($event)">
-      <span *ngIf="icon" class="icon">{{ icon }}</span>
+      <span *ngIf="icon" class="material-icons icon">{{ icon }}</span>
       {{ label }}
     </button>
   `,

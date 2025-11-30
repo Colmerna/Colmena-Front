@@ -23,6 +23,10 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
             {{ errorMessage }}
         </div>
 
+        <div *ngIf="successMessage" class="success-alert">
+            {{ successMessage }}
+        </div>
+
         <form [formGroup]="clientForm" (ngSubmit)="onSubmit()">
           <div class="form-grid">
             <!-- Left Column -->
@@ -243,11 +247,20 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
         display: block;
         padding-left: 10px;
     }
+    .success-alert {
+        background-color: #d4edda;
+        color: #155724;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #c3e6cb;
+        border-radius: 5px;
+    }
   `]
 })
 export class CreateClientComponent {
   clientForm: FormGroup;
   errorMessage: string = '';
+  successMessage: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -275,7 +288,10 @@ export class CreateClientComponent {
       this.errorMessage = '';
       this.clientService.createClient(this.clientForm.value).subscribe({
         next: () => {
-          this.router.navigate(['/dashboard/clients']);
+          this.successMessage = 'Cliente creado exitosamente. Redirigiendo...';
+          setTimeout(() => {
+            this.router.navigate(['/dashboard/clients']);
+          }, 2000);
         },
         error: (err) => {
           console.error('Error creating client', err);
