@@ -109,9 +109,10 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                     <span class="input-icon material-icons">home</span>
                     <select formControlName="estadoProyecto" class="ui-input">
                         <option value="" disabled selected>Estado del proyecto</option>
-                        <option value="EN_PLANOS">En Planos</option>
+                        <option value="DISPONIBLE">Disponible</option>
                         <option value="EN_CONSTRUCCION">En Construcción</option>
-                        <option value="ENTREGA_INMEDIATA">Entrega Inmediata</option>
+                        <option value="RESERVADO">Reservado</option>
+                        <option value="VENDIDO">Vendido</option>
                     </select>
                 </div>
                 <span class="error-text" *ngIf="isFieldInvalid('estadoProyecto')">{{ getErrorMessage('estadoProyecto') }}</span>
@@ -252,9 +253,24 @@ export class CreateProjectComponent {
     if (this.projectForm.valid) {
       this.errorMessage = '';
       const formValue = this.projectForm.value;
-      formValue.igv = formValue.precio * 0.18;
+      
+      // Convert data types to match backend expectations
+      const projectData = {
+        nombre: formValue.nombre,
+        direccion: formValue.direccion,
+        distrito: formValue.distrito,
+        areaM2: parseFloat(formValue.areaM2),
+        precio: parseFloat(formValue.precio),
+        igv: parseFloat(formValue.precio) * 0.18,
+        numHabitaciones: parseInt(formValue.numHabitaciones),
+        tipoProyecto: formValue.tipoProyecto,
+        estadoProyecto: formValue.estadoProyecto,
+        bancoId: parseInt(formValue.bancoId)
+      };
 
-      this.projectService.createProject(formValue).subscribe({
+      console.log('Sending project data:', projectData);
+
+      this.projectService.createProject(projectData).subscribe({
         next: () => {
           this.router.navigate(['/dashboard/projects']);
         },

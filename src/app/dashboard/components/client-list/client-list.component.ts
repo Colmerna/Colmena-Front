@@ -114,5 +114,6 @@ export class ClientListComponent implements OnInit {
 
   viewClient(client: Client) {
     console.log('View client', client);
+    this.router.navigate(['/dashboard/clients', client.id]);
   }
 }

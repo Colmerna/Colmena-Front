@@ -22,6 +22,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule, FormsModu
           [type]="type"
           [placeholder]="placeholder"
           [value]="value"
+          [readonly]="readonly"
           (input)="onInput($event)"
           (blur)="onTouched()"
           class="ui-input"
@@ -87,6 +88,7 @@ export class UiInputComponent implements ControlValueAccessor {
   @Input() type: string = 'text';
   @Input() icon: string = '';
   @Input() errorMessage: string = '';
+  @Input() readonly: boolean = false;
 
   value: string = '';
   onChange: any = () => { };

@@ -30,6 +30,7 @@ import { UiButtonComponent } from '../../../shared/components/ui-button/ui-butto
               <th>Area del proyecto</th>
               <th>Igv</th>
               <th>Precio</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -40,9 +41,15 @@ import { UiButtonComponent } from '../../../shared/components/ui-button/ui-butto
               <td>{{ project.areaM2 }}</td>
               <td>{{ project.igv | currency:'USD':'symbol':'1.2-2' }}</td>
               <td>{{ project.precio | currency:'USD':'symbol':'1.2-2' }}</td>
+              <td>
+                <app-ui-button 
+                  label="Ver proyecto" 
+                  (onClick)="viewProject(project)">
+                </app-ui-button>
+              </td>
             </tr>
             <tr *ngIf="projects.length === 0">
-              <td colspan="6" style="text-align: center;">No hay proyectos registrados.</td>
+              <td colspan="7" style="text-align: center;">No hay proyectos registrados.</td>
             </tr>
           </tbody>
         </table>
@@ -80,5 +87,10 @@ export class ProjectListComponent implements OnInit {
 
     navigateToCreate() {
         this.router.navigate(['/dashboard/create-project']);
+    }
+
+    viewProject(project: Project) {
+        console.log('View project', project);
+        this.router.navigate(['/dashboard/projects', project.id]);
     }
 }
