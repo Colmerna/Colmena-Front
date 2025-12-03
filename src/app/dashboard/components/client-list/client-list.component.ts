@@ -94,7 +94,6 @@ export class ClientListComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading clients', err);
-        // Mock data for development if backend fails or is empty
         this.clients = [
           { id: 77788933, dni: '77788933', nombres: 'Juan', apellidos: 'Perez', telefono: '955448490', email: 'juan@example.com', ingresoMensual: 30000, dependientes: 0, scoreRiesgo: 21, gastoMensualAprox: 1000, usuarioId: 1, situacionLaboral: 'Empleado estable', estadoCivil: 'Soltero' },
           { id: 77788933, dni: '77788933', nombres: 'Maria', apellidos: 'Gomez', telefono: '955448490', email: 'maria@example.com', ingresoMensual: 30000, dependientes: 0, scoreRiesgo: 21, gastoMensualAprox: 1000, usuarioId: 1, situacionLaboral: 'Empleado estable', estadoCivil: 'Soltero' }

@@ -19,15 +19,17 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule, FormsModu
       <div class="input-wrapper">
         <span *ngIf="icon" class="input-icon material-icons">{{ icon }}</span>
         <input
-          [type]="type"
-          [placeholder]="placeholder"
-          [value]="value"
-          [readonly]="readonly"
-          (input)="onInput($event)"
-          (blur)="onTouched()"
-          class="ui-input"
-          [class.has-error]="!!errorMessage"
-        />
+  [type]="type"
+  [placeholder]="placeholder"
+  [value]="value"
+  [readonly]="readonly"
+  [disabled]="disabled"
+  (input)="onInput($event)"
+  (blur)="onTouched()"
+  class="ui-input"
+  [class.has-error]="!!errorMessage"
+/>
+
       </div>
       <span *ngIf="errorMessage" class="error-text">{{ errorMessage }}</span>
     </div>
@@ -89,6 +91,7 @@ export class UiInputComponent implements ControlValueAccessor {
   @Input() icon: string = '';
   @Input() errorMessage: string = '';
   @Input() readonly: boolean = false;
+  @Input() disabled: boolean = false;
 
   value: string = '';
   onChange: any = () => { };
@@ -111,4 +114,7 @@ export class UiInputComponent implements ControlValueAccessor {
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
+  setDisabledState?(isDisabled: boolean): void {
+  this.disabled = isDisabled;
+}
 }

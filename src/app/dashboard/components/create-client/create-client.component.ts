@@ -109,6 +109,9 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
                         <option value="" disabled selected>Seleccionar la situación del cliente</option>
                         <option value="DEPENDIENTE">Dependiente</option>
                         <option value="INDEPENDIENTE">Independiente</option>
+                        <option value="DESEMPLEADO">Desempleado</option>
+                        <option value="ESTUDIANTE">Estudiante</option>
+                        <option value="JUBILADO">Jubilado</option>
                     </select>
                 </div>
                 <span class="error-text" *ngIf="isFieldInvalid('situacionLaboral')">{{ getErrorMessage('situacionLaboral') }}</span>
@@ -183,7 +186,7 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
       flex-direction: column;
       gap: 15px;
     }
-    /* Styles for Select (duplicating input styles for now, should be shared) */
+    
     .input-container {
       margin-bottom: 15px;
     }
@@ -210,12 +213,12 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
       padding: 12px 15px 12px 45px;
       border: 1px solid var(--primary-blue);
       border-radius: 25px;
-      background-color: rgba(255, 255, 255, 0.1); /* Slight transparency or just border */
-      border: 1px solid #333; /* Darker border */
+      background-color: rgba(255, 255, 255, 0.1); 
+      border: 1px solid #333; 
       color: var(--text-dark);
       font-size: 1rem;
       outline: none;
-      appearance: none; /* Remove default arrow */
+      appearance: none; 
     }
     
     /* Button positioning */
@@ -225,7 +228,7 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
         justify-content: flex-end;
     }
     
-    /* Override button style for this form to be dark blue */
+
     ::ng-deep .create-btn .ui-button {
         background-color: var(--primary-blue) !important;
         color: white !important;
@@ -274,12 +277,12 @@ export class CreateClientComponent {
       email: ['', [Validators.required, Validators.email]],
       dependientes: [0, [Validators.min(0)]],
       gastoMensualAprox: [0, [Validators.min(0)]],
-      telefono: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(15), Validators.pattern('^[0-9+]+$')]],
+      telefono: ['', [Validators.required, Validators.minLength(9), Validators.maxLength(9), Validators.pattern('^[0-9+]+$')]],
       ingresoMensual: [0, [Validators.required, Validators.min(0)]],
       situacionLaboral: ['', Validators.required],
       scoreRiesgo: [0, [Validators.min(0)]],
       estadoCivil: ['', Validators.required],
-      usuarioId: [1] // Hardcoded for now
+      usuarioId: [1] 
     });
   }
 

@@ -44,7 +44,7 @@ export class RegisterComponent {
         next: (usuario: Usuario) => {
           this.loading = false;
           alert('Usuario registrado exitosamente');
-          this.router.navigate(['/login']);
+          this.router.navigate(['auth/login']);
         },
         error: (error) => {
           this.loading = false;

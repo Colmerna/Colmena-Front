@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -24,6 +24,13 @@ import { RouterModule } from '@angular/router';
         <a routerLink="/dashboard/financing" routerLinkActive="active" class="nav-item">
           <span class="material-icons">bar_chart</span> Financiamiento
         </a>
+        
+        <div class="logout-area">
+          <button class="logout-button" (click)="logout()">
+            <span class="material-icons">logout</span>
+            Cerrar Sesión
+          </button>
+        </div>
       </nav>
     </div>
   `,
@@ -81,6 +88,47 @@ import { RouterModule } from '@angular/router';
       color: var(--text-dark);
       border-left: 4px solid #fff; /* Optional accent */
     }
+    .logout-area {
+      margin-top: 30px;
+      padding: 0 20px;
+    }
+    .logout-button {
+      width: 100%;
+      padding: 12px 20px;
+      background-color: transparent;
+      color: #fff;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .logout-button .material-icons {
+      font-size: 20px;
+    }
+    .logout-button:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+    .logout-button:active {
+      transform: scale(0.98);
+    }
   `]
 })
-export class SidebarComponent { }
+export class SidebarComponent {
+  constructor(private router: Router) {}
+
+  logout() {
+    localStorage.clear();
+    sessionStorage.clear();
+    
+    this.router.navigate(['/auth/login']);
+    
+    console.log('Sesión cerrada exitosamente');
+  }
+}

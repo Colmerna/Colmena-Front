@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ClientService } from '../../infrastructure/services/client.service';
 import { Client } from '../../domain/model/client.model';
 import { UiButtonComponent } from '../../../shared/components/ui-button/ui-button.component';
+import { FinancingService } from '../../infrastructure/services/financing.service';
 
 @Component({
   selector: 'app-view-client',
@@ -157,14 +158,6 @@ import { UiButtonComponent } from '../../../shared/components/ui-button/ui-butto
             </div>
           </div>
         </div>
-
-        <div class="button-container">
-          <app-ui-button 
-            label="Ver créditos" 
-            icon="📋"
-            (onClick)="viewCredits()">
-          </app-ui-button>
-        </div>
       </div>
     </div>
   `,
@@ -253,7 +246,8 @@ export class ViewClientComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private clientService: ClientService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private financingService: FinancingService
   ) {}
 
   ngOnInit(): void {
@@ -273,7 +267,7 @@ export class ViewClientComponent implements OnInit {
       next: (data) => {
         console.log('Client data received:', data);
         this.client = data;
-        this.cdr.detectChanges(); // Force change detection
+        this.cdr.detectChanges(); 
       },
       error: (err) => {
         console.error('Error loading client', err);
@@ -286,10 +280,5 @@ export class ViewClientComponent implements OnInit {
     this.router.navigate(['/dashboard/clients']);
   }
 
-  viewCredits(): void {
-    if (this.client) {
-      // TODO: Navigate to credits view when implemented
-      console.log('View credits for client:', this.client.id);
-    }
-  }
+
 }

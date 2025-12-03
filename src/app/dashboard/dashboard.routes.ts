@@ -8,6 +8,9 @@ import { CreateProjectComponent } from './components/create-project/create-proje
 import { ViewProjectComponent } from './components/view-project/view-project.component';
 import { FinancingListComponent } from './components/financing-list/financing-list.component';
 import { CreateFinancingComponent } from './components/create-financing/create-financing.component';
+import { CreditsResultComponent } from './components/credit-results/credit-results';
+import { ViewFinancingComponent } from './components/view-financing/view-financing.component';
+
 
 export const DASHBOARD_ROUTES: Routes = [
     {
@@ -22,6 +25,8 @@ export const DASHBOARD_ROUTES: Routes = [
             { path: 'projects/:id', component: ViewProjectComponent },
             { path: 'financing', component: FinancingListComponent },
             { path: 'create-financing', component: CreateFinancingComponent },
+            { path: 'credits/:id', component: CreditsResultComponent },
+           { path: 'financing/:id', component: ViewFinancingComponent },
             { path: '', redirectTo: 'clients', pathMatch: 'full' }
         ]
     }

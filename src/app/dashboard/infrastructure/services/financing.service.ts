@@ -28,7 +28,22 @@ export class FinancingService {
         return this.http.post<Financing>(this.apiUrl, financing);
     }
 
-    getFinancingById(id: number): Observable<Financing> {
-        return this.http.get<Financing>(`${this.apiUrl}/${id}`);
+   getFinancingById(id: number): Observable<Financing> {  
+  return this.http.get<Financing>(`${this.apiUrl}/${id}`);
+}
+
+
+    getCuotasByCredit(creditoId: number): Observable<any> {
+        return this.http.get<any>(`${this.apiUrl}/${creditoId}/cuotas`);
     }
+
+    simulateCredit(id: number): Observable<any> {
+  return this.http.post<any>(`${this.apiUrl}/${id}/simular`, {});
+}
+
+getCreditResults(id: number): Observable<any> {
+  return this.http.get<any>(`${this.apiUrl}/${id}/resultado`);
+}
+
+
 }

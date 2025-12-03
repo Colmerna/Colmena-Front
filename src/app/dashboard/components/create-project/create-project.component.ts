@@ -23,6 +23,10 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
             {{ errorMessage }}
         </div>
 
+        <div *ngIf="successMessage" class="success-alert">
+            {{ successMessage }}
+        </div>
+
         <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
           <div class="form-grid">
             <!-- Left Column -->
@@ -52,18 +56,18 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
               </app-ui-input>
 
               <app-ui-input 
-                label="Área del proyecto" 
-                placeholder="Ingresar el área del proyecto" 
-                icon="home"
+                label="Área del proyecto (m²)" 
+                placeholder="Ej: 75.5" 
+                icon="straighten"
                 type="number"
                 formControlName="areaM2"
                 [errorMessage]="isFieldInvalid('areaM2') ? getErrorMessage('areaM2') : ''">
               </app-ui-input>
 
               <app-ui-input 
-                label="ID del banco (BCP)" 
+                label="ID del banco" 
                 placeholder="Ingresar el ID del banco" 
-                icon="home"
+                icon="account_balance"
                 type="number"
                 formControlName="bancoId"
                 [errorMessage]="isFieldInvalid('bancoId') ? getErrorMessage('bancoId') : ''">
@@ -74,8 +78,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
             <div class="form-column">
               <app-ui-input 
                 label="Precio" 
-                placeholder="Ingresar el precio de la propiedad" 
-                icon="home"
+                placeholder="Ej: 250000" 
+                icon="attach_money"
                 type="number"
                 formControlName="precio"
                 [errorMessage]="isFieldInvalid('precio') ? getErrorMessage('precio') : ''">
@@ -83,8 +87,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
 
               <app-ui-input 
                 label="Número de habitaciones" 
-                placeholder="Ingresar el N de habitaciones" 
-                icon="home"
+                placeholder="Ej: 3" 
+                icon="bed"
                 type="number"
                 formControlName="numHabitaciones"
                 [errorMessage]="isFieldInvalid('numHabitaciones') ? getErrorMessage('numHabitaciones') : ''">
@@ -93,9 +97,9 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
               <div class="input-container">
                 <label class="input-label">Tipo de proyecto</label>
                 <div class="select-wrapper">
-                    <span class="input-icon material-icons">home</span>
+                    <span class="input-icon material-icons">apartment</span>
                     <select formControlName="tipoProyecto" class="ui-input">
-                        <option value="" disabled selected>Tipo de proyecto</option>
+                        <option value="" disabled selected>Seleccionar tipo de proyecto</option>
                         <option value="DEPARTAMENTO">Departamento</option>
                         <option value="CASA">Casa</option>
                     </select>
@@ -106,9 +110,9 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
               <div class="input-container">
                 <label class="input-label">Estado del proyecto</label>
                 <div class="select-wrapper">
-                    <span class="input-icon material-icons">home</span>
+                    <span class="input-icon material-icons">flag</span>
                     <select formControlName="estadoProyecto" class="ui-input">
-                        <option value="" disabled selected>Estado del proyecto</option>
+                        <option value="" disabled selected>Seleccionar estado del proyecto</option>
                         <option value="DISPONIBLE">Disponible</option>
                         <option value="EN_CONSTRUCCION">En Construcción</option>
                         <option value="RESERVADO">Reservado</option>
@@ -120,11 +124,11 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
 
               <div class="button-container">
                  <app-ui-button 
-                    label="Crear" 
+                    label="Crear Proyecto" 
                     type="submit"
                     [fullWidth]="false"
                     class="create-btn"
-                    [disabled]="projectForm.invalid">
+                    [disabled]="projectForm.invalid || isSubmitting">
                  </app-ui-button>
               </div>
             </div>
@@ -145,10 +149,15 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
       cursor: pointer;
       font-weight: 600;
       color: var(--primary-blue);
+      transition: opacity 0.2s;
+    }
+    .back-link:hover {
+      opacity: 0.7;
     }
     .form-card {
       padding: 30px;
       border-radius: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     .form-title {
       color: var(--primary-blue);
@@ -185,6 +194,7 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
         color: var(--text-dark);
         opacity: 0.7;
         pointer-events: none;
+        z-index: 1;
     }
     .ui-input {
       width: 100%;
@@ -192,11 +202,15 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
       border: 1px solid var(--primary-blue);
       border-radius: 25px;
       background-color: rgba(255, 255, 255, 0.1);
-      border: 1px solid #333;
       color: var(--text-dark);
       font-size: 1rem;
       outline: none;
       appearance: none;
+      cursor: pointer;
+    }
+    .ui-input:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
     }
     .button-container {
         margin-top: auto;
@@ -209,12 +223,24 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
         padding-left: 40px;
         padding-right: 40px;
     }
+    ::ng-deep .create-btn .ui-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
     .error-alert {
         background-color: #f8d7da;
         color: #721c24;
         padding: 15px;
         margin-bottom: 20px;
         border: 1px solid #f5c6cb;
+        border-radius: 5px;
+    }
+    .success-alert {
+        background-color: #d4edda;
+        color: #155724;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid #c3e6cb;
         border-radius: 5px;
     }
     .error-text {
@@ -229,6 +255,8 @@ import { UiInputComponent } from '../../../shared/components/ui-input/ui-input.c
 export class CreateProjectComponent {
   projectForm: FormGroup;
   errorMessage: string = '';
+  successMessage: string = '';
+  isSubmitting: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -239,54 +267,70 @@ export class CreateProjectComponent {
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       direccion: ['', [Validators.required, Validators.minLength(5)]],
       distrito: ['', Validators.required],
-      areaM2: [0, [Validators.required, Validators.min(1)]],
-      precio: [0, [Validators.required, Validators.min(1)]],
-      igv: [0],
-      numHabitaciones: [0, [Validators.required, Validators.min(1)]],
+      areaM2: ['', [Validators.required, Validators.min(1)]],
+      precio: ['', [Validators.required, Validators.min(1)]],
+      numHabitaciones: ['', [Validators.required, Validators.min(1)]],
       tipoProyecto: ['', Validators.required],
       estadoProyecto: ['', Validators.required],
-      bancoId: [1, Validators.required]
+      bancoId: [1, [Validators.required, Validators.min(1)]]
     });
   }
 
   onSubmit() {
-    if (this.projectForm.valid) {
+    if (this.projectForm.valid && !this.isSubmitting) {
+      this.isSubmitting = true;
       this.errorMessage = '';
+      this.successMessage = '';
+      
       const formValue = this.projectForm.value;
       
-      // Convert data types to match backend expectations
+  
       const projectData = {
-        nombre: formValue.nombre,
-        direccion: formValue.direccion,
-        distrito: formValue.distrito,
+        nombre: formValue.nombre.trim(),
+        direccion: formValue.direccion.trim(),
+        distrito: formValue.distrito.trim(),
         areaM2: parseFloat(formValue.areaM2),
         precio: parseFloat(formValue.precio),
-        igv: parseFloat(formValue.precio) * 0.18,
-        numHabitaciones: parseInt(formValue.numHabitaciones),
+        igv: 0.18, // 18% como decimal
+        numHabitaciones: parseInt(formValue.numHabitaciones, 10),
         tipoProyecto: formValue.tipoProyecto,
         estadoProyecto: formValue.estadoProyecto,
-        bancoId: parseInt(formValue.bancoId)
+        bancoId: parseInt(formValue.bancoId, 10)
       };
 
-      console.log('Sending project data:', projectData);
+      console.log('📤 Enviando proyecto:', projectData);
 
       this.projectService.createProject(projectData).subscribe({
-        next: () => {
-          this.router.navigate(['/dashboard/projects']);
+        next: (response) => {
+  
+          this.successMessage = 'Proyecto creado exitosamente. Redirigiendo...';
+          setTimeout(() => {
+            this.router.navigate(['/dashboard/projects']);
+          }, 1500);
         },
         error: (err) => {
-          console.error('Error creating project', err);
-          if (err.status === 500) {
+    
+          console.error('Status:', err.status);
+          console.error('Error completo:', err.error);
+          
+          this.isSubmitting = false;
+          
+          if (err.status === 0) {
+            this.errorMessage = 'No se puede conectar con el servidor. Verifica que el backend esté corriendo.';
+          } else if (err.status === 400) {
+            this.errorMessage = 'Datos inválidos. Verifica que todos los campos estén correctos.';
+          } else if (err.status === 500) {
             this.errorMessage = 'Error interno del servidor. Verifica los datos ingresados.';
           } else if (err.status === 404) {
-            this.errorMessage = 'No se pudo conectar con el servidor (404).';
+            this.errorMessage = 'Endpoint no encontrado (404). Verifica la URL del backend.';
           } else {
-            this.errorMessage = 'Ocurrió un error al crear el proyecto.';
+            this.errorMessage = `Error al crear el proyecto: ${err.error?.message || 'Error desconocido'}`;
           }
         }
       });
     } else {
       this.projectForm.markAllAsTouched();
+      this.errorMessage = 'Por favor, completa todos los campos requeridos.';
     }
   }
 
