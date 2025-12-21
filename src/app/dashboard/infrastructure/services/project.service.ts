@@ -7,7 +7,7 @@ import { Project } from '../../domain/model/project.model';
     providedIn: 'root'
 })
 export class ProjectService {
-    private apiUrl = 'http://localhost:8080/api/proyectos';
+    private apiUrl = 'https://colmena-back.onrender.com/api/proyectos';
     private headers = new HttpHeaders({
         'Content-Type': 'application/json',
         'Accept': 'application/json'

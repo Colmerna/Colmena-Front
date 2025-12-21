@@ -7,7 +7,7 @@ import { Client } from '../../domain/model/client.model';
     providedIn: 'root'
 })
 export class ClientService {
-    private apiUrl = 'http://localhost:8080/api/clientes';
+    private apiUrl = 'https://colmena-back.onrender.com/api/clientes';
     private headers = new HttpHeaders({
         'Content-Type': 'application/json',
         'Accept': 'application/json'

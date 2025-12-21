@@ -7,7 +7,7 @@ import { Financing } from '../../domain/model/financing.model';
     providedIn: 'root'
 })
 export class FinancingService {
-    private apiUrl = '/api/creditos';
+    private apiUrl = 'https://colmena-back.onrender.com/api/creditos';
 
     constructor(private http: HttpClient) { }
 
@@ -28,7 +28,7 @@ export class FinancingService {
         return this.http.post<Financing>(this.apiUrl, financing);
     }
 
-   getFinancingById(id: number): Observable<Financing> {  
+   getFinancingById(id: number): Observable<Financing> {
   return this.http.get<Financing>(`${this.apiUrl}/${id}`);
 }
 

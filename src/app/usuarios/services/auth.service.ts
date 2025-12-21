@@ -24,7 +24,7 @@ export interface LoginRequest {
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:8080/api';
+  private baseUrl = 'https://colmena-back.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 
